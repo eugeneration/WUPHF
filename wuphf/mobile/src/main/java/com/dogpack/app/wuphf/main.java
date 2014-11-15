@@ -1,7 +1,9 @@
 package com.dogpack.app.wuphf;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,21 +56,49 @@ public class main extends Activity {
         Toast toast = Toast.makeText(this, "Message Sent!", Toast.LENGTH_SHORT);
         toast.show();
 
-        List<NameValuePair> yoParams = new ArrayList<NameValuePair>(2);
-        yoParams.add(new BasicNameValuePair("api_token", "a1001602-9b08-4783-89c6-c86f700590ec"));
-        yoParams.add(new BasicNameValuePair("username", "HIPSTERVY"));
-        postData("https://api.justyo.co/yo/", yoParams);
+        PostDataTask poster = new PostDataTask();
+
+        //=============================
+        // YO
+        PostData yoData = new PostData("https://api.justyo.co/yo/");
+        yoData.params.add(new BasicNameValuePair("api_token", "a1001602-9b08-4783-89c6-c86f700590ec"));
+        yoData.params.add(new BasicNameValuePair("username", "HIPSTERVY"));
+        poster.execute(yoData);
     }
 
-    public void postData(String url, List<NameValuePair> params) {
-        // Create a new HttpClient and Post Header
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(url);
+    /**
+     * Instructions on how to send an HTTP push:
+     * Create a PostData object with the APIs URL
+     * then add parameters as seen in the examples above: ("[parameter name]", "[data]")
+     * Then run "poster.execute(yourData);" using yourData.
+     */
+    private class PostDataTask extends AsyncTask<PostData, Void, HttpResponse> {
+        protected HttpResponse doInBackground(PostData... dataList) {
+            PostData data = dataList[0];
 
-        try {
-            httppost.setEntity(new UrlEncodedFormEntity(params));
-            HttpResponse response = httpclient.execute(httppost);
-        } catch (ClientProtocolException e) {
-        } catch (IOException e) {}
+            // Create a new HttpClient and Post Header
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(data.url);
+            try {
+                httppost.setEntity(new UrlEncodedFormEntity(data.params));
+                HttpResponse response = httpclient.execute(httppost);
+                return response;
+            } catch (ClientProtocolException e) {
+            } catch (IOException e) {
+            }
+            return null;
+        }
+        protected void onPostExecute(HttpResponse response) {
+            Log.v("HTTP", response.toString());
+        }
+
+    }
+    private class PostData {
+        public String url;
+        public List<NameValuePair> params;
+        public PostData (String url) {
+            this.url = url;
+            params = new ArrayList<NameValuePair>();
+        }
     }
 }
