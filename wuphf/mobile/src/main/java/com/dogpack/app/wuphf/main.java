@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class main extends Activity {
@@ -32,5 +34,11 @@ public class main extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // send the message
+    public void sendMessage(View view) {
+        Toast toast = Toast.makeText(this, "Message Sent!", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
