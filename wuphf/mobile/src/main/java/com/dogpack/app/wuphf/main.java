@@ -2,6 +2,7 @@ package com.dogpack.app.wuphf;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,13 +52,26 @@ public class main extends Activity {
 
     // send the message
     public void sendMessage(View view) {
-        Toast toast = Toast.makeText(this, "Message Sent!", Toast.LENGTH_SHORT);
-        toast.show();
+        //Toast toast = Toast.makeText(this, "Message Sent!", Toast.LENGTH_SHORT);
+        //toast.show();
 
-        List<NameValuePair> yoParams = new ArrayList<NameValuePair>(2);
+        /*List<NameValuePair> yoParams = new ArrayList<NameValuePair>(2);
         yoParams.add(new BasicNameValuePair("api_token", "a1001602-9b08-4783-89c6-c86f700590ec"));
         yoParams.add(new BasicNameValuePair("username", "HIPSTERVY"));
-        postData("https://api.justyo.co/yo/", yoParams);
+        postData("https://api.justyo.co/yo/", yoParams);*/
+
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage("+15166402045", null, "Hey, I'm sending you a message automatically", null, null);
+            Toast.makeText(getApplicationContext(), "SMS sent.",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(),
+                    "SMS failed, please try again.",
+                    Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
     }
 
     public void postData(String url, List<NameValuePair> params) {
