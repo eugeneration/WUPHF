@@ -22,6 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 
 public class main extends Activity {
@@ -54,8 +55,8 @@ public class main extends Activity {
 
     // send the message
     public void sendMessage(View view) {
-        //Toast toast = Toast.makeText(this, "Message Sent!", Toast.LENGTH_SHORT);
-        //toast.show();
+        Toast toast = Toast.makeText(this, "Message Sent!", Toast.LENGTH_SHORT);
+        toast.show();
 
         //=============================
         // SMS
@@ -79,6 +80,20 @@ public class main extends Activity {
         yoData.params.add(new BasicNameValuePair("api_token", "a1001602-9b08-4783-89c6-c86f700590ec"));
         yoData.params.add(new BasicNameValuePair("username", "HIPSTERVY"));
         poster.execute(yoData);
+
+        //=============================
+        // Email
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                GmailSender sender = new GmailSender("billtest2222@gmail.com", "princetonmit");
+                sender.sendMail("[URGENT] Please reply!",
+                        "Yo, please reply me ASAP!",
+                        "billtest2222@gmail.com",
+                        "eugene.lee337@gmail.com");
+            }
+        });
+        t.start();
     }
 
     /**
